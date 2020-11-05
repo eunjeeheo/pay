@@ -12,6 +12,9 @@ import java.util.Date;
 public interface PromotionService {
 
     @RequestMapping(method= RequestMethod.POST, path="/promotions")
-    public void payCancel(@RequestBody Promotion promotion);
+    public void promoCancel(@RequestBody Promotion promotion);
 
 }
+
+
+

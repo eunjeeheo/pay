@@ -69,4 +69,5 @@ spring:
 
 api:
   url:
-    promotion: http://promotion:8080
+    promotion: ${configurl}
+

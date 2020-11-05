@@ -43,11 +43,6 @@ public class Payment {
     public void onPreUpdate(){
         if("OrderCancelled".equals(process)) {
             System.out.println("***** 결재 취소 중 *****");
-            setProcess("PayCancelled");
-            setPrice((double) 0);
-            PayCancelled payCancelled = new PayCancelled();
-            BeanUtils.copyProperties(this, payCancelled);
-            payCancelled.publishAfterCommit();
 
             //Following code causes dependency to external APIs
             // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
@@ -57,7 +52,12 @@ public class Payment {
             promotion.setProcess("PayCancelled");
             // mappings goes here
             PayApplication.applicationContext.getBean(phoneseller.external.PromotionService.class)
-                    .payCancel(promotion);
+                    .promoCancel(promotion);
+
+            setProcess("PayCancelled");
+            PayCancelled payCancelled = new PayCancelled();
+            BeanUtils.copyProperties(this, payCancelled);
+            payCancelled.publishAfterCommit();
 
             System.out.println("***** 결재 취소 완료 *****");
         }
