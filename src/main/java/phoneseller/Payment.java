@@ -36,6 +36,25 @@ public class Payment {
             System.out.println(toString());
             System.out.println("***** 결재 완료 *****");
 
+        } else if("OrderCancelled".equals(process)) {
+            System.out.println("***** 결재 취소 중 *****");
+
+            //Following code causes dependency to external APIs
+            // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
+            phoneseller.external.Promotion promotion = new phoneseller.external.Promotion();
+            promotion.setOrderId(getOrderId());
+            promotion.setPoint((double)-1);
+            promotion.setProcess("PayCancelled");
+            // mappings goes here
+            PayApplication.applicationContext.getBean(phoneseller.external.PromotionService.class)
+                    .promoCancel(promotion);
+
+            setProcess("PayCancelled");
+            PayCancelled payCancelled = new PayCancelled();
+            BeanUtils.copyProperties(this, payCancelled);
+            payCancelled.publishAfterCommit();
+
+            System.out.println("***** 결재 취소 완료 *****");
         }
     }
 
